@@ -8,10 +8,10 @@ First, download the pre-trained weights:
 
 Then, you can run predictions:
 
-    cog predict -i prompt="with smoke, half ice and half fire and ultra realistic in detail.wolf, typography, dark fantasy, wildlife photography, vibrant, cinematic and on a black background" -i seed=36446545871
+    cog predict -i image=@wolf.png -i prompt="pink and blue fur"
 
 ## Example:
 
-"with smoke, half ice and half fire and ultra realistic in detail.wolf, typography, dark fantasy, wildlife photography, vibrant, cinematic and on a black background"
+"pink and blue fur"
 
-![alt text](output.0.png)
+![alt text](output.png)
