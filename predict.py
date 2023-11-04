@@ -35,11 +35,10 @@ class Predictor(BasePredictor):
     def setup(self) -> None:
         """Load the model into memory to make running multiple predictions efficient"""
         self.pipe = StableDiffusionXLPipeline.from_pretrained(
-            MODEL_NAME,
+            MODEL_CACHE,
             torch_dtype=torch.float16,
             use_safetensors=True,
             variant="fp16",
-            cache_dir=MODEL_CACHE,
         ).to("cuda")
 
     @torch.inference_mode()
