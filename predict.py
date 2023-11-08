@@ -240,8 +240,11 @@ class Predictor(BasePredictor):
         }
 
         if batched_prompt:
+            print("Batch of prompts mode")
             sdxl_kwargs["prompt"] = prompt.strip().splitlines() * num_outputs
             sdxl_kwargs["negative_prompt"] = negative_prompt.strip().splitlines() * num_outputs
+            while (len(sdxl_kwargs["prompt"]) > len(sdxl_kwargs["negative_prompt"])) :
+                sdxl_kwargs["negative_prompt"].append("")
         else:
             sdxl_kwargs["prompt"] =  [prompt] * num_outputs
             sdxl_kwargs["negative_prompt"] = [negative_prompt] * num_outputs
