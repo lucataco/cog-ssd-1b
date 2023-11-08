@@ -123,6 +123,10 @@ class Predictor(BasePredictor):
             description="Negative Input prompt",
             default="scary, cartoon, painting"
         ),
+        batched_prompt: bool = Input(
+            description="When active, your prompt will be split by newlines and images will be generated for each individual line",
+            default=False
+        ),
         image: Path = Input(
             description="Input image for img2img or inpaint mode",
             default=None,
@@ -230,12 +234,20 @@ class Predictor(BasePredictor):
         generator = torch.Generator("cuda").manual_seed(seed)
 
         common_args = {
-            "prompt": [prompt] * num_outputs,
-            "negative_prompt": [negative_prompt] * num_outputs,
             "guidance_scale": guidance_scale,
             "generator": generator,
             "num_inference_steps": num_inference_steps,
         }
+
+        if batched_prompt:
+            print("Batch of prompts mode")
+            sdxl_kwargs["prompt"] = prompt.strip().splitlines() * num_outputs
+            sdxl_kwargs["negative_prompt"] = negative_prompt.strip().splitlines() * num_outputs
+            while (len(sdxl_kwargs["prompt"]) > len(sdxl_kwargs["negative_prompt"])) :
+                sdxl_kwargs["negative_prompt"].append("")
+        else:
+            sdxl_kwargs["prompt"] =  [prompt] * num_outputs
+            sdxl_kwargs["negative_prompt"] = [negative_prompt] * num_outputs
 
         if self.is_lora:
             sdxl_kwargs["cross_attention_kwargs"] = {"scale": lora_scale}
